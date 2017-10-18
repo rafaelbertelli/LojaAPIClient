@@ -12,28 +12,12 @@ namespace LojaAPIClient
     {
         static void Main(string[] args)
         {
-            string conteudo;
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://localhost:53067/api/carrinho/1/produto/6237");
+            request.Method = "DELETE";
+            
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 
-            //HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://www.mocky.io/v2/52aaf5deee7ba8c70329fb7d");
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://localhost:53067/api/carrinho/1");
-            request.Method = "POST";
-            request.Accept = "application/xml"; // forca o retorno ser XML
-            //request.Accept = "application/json"; // forca o retorno ser JSON
-
-            string xml = "<Carrinho xmlns:i='http://www.w3.org/2001/XMLSchema-instance' xmlns='http://schemas.datacontract.org/2004/07/Loja.Models'><Endereco>Rua Vergueiro 3185, 8 andar, Sao Paulo</Endereco><Id>1</Id><Produtos><Produto><Id>1542</Id><Nome>Bike GTS 26</Nome><Preco>2000</Preco><Quantidade>1</Quantidade></Produto></Produtos></Carrinho>";
-            byte[] xmlBytes = Encoding.UTF8.GetBytes(xml);
-            request.GetRequestStream().Write(xmlBytes, 0, xmlBytes.Length);
-
-            request.ContentType = "application/xml";
-
-            WebResponse response = request.GetResponse();
-            using (Stream responseStream = response.GetResponseStream())
-            {
-                StreamReader reader = new StreamReader(responseStream, Encoding.UTF8);
-                conteudo = reader.ReadToEnd();
-            }
-
-            Console.Write(conteudo);
+            Console.WriteLine(response.StatusCode);
             Console.Read();
         }
 
@@ -103,7 +87,7 @@ namespace LojaAPIClient
             string conteudo;
 
             //HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://www.mocky.io/v2/52aaf5deee7ba8c70329fb7d");
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://localhost:53067/api/carrinho/1");
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://localhost:53067/api/carrinho");
             request.Method = "POST";
             //request.Accept = "application/xml"; // forca o retorno ser XML
             request.Accept = "application/json"; // forca o retorno ser JSON
@@ -130,7 +114,7 @@ namespace LojaAPIClient
             string conteudo;
 
             //HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://www.mocky.io/v2/52aaf5deee7ba8c70329fb7d");
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://localhost:53067/api/carrinho/1");
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://localhost:53067/api/carrinho");
             request.Method = "POST";
             request.Accept = "application/xml"; // forca o retorno ser XML
             //request.Accept = "application/json"; // forca o retorno ser JSON
@@ -152,5 +136,52 @@ namespace LojaAPIClient
             Console.Read();
         }
 
+        static void TestaPostXml2()
+        {
+            string conteudo;
+
+            //HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://www.mocky.io/v2/52aaf5deee7ba8c70329fb7d");
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://localhost:53067/api/carrinho");
+            request.Method = "POST";
+            request.Accept = "application/xml"; // forca o retorno ser XML
+            //request.Accept = "application/json"; // forca o retorno ser JSON
+
+            string xml = "<Carrinho xmlns:i='http://www.w3.org/2001/XMLSchema-instance' xmlns='http://schemas.datacontract.org/2004/07/Loja.Models'><Endereco>Rua Vergueiro 3185, 8 andar, Sao Paulo</Endereco><Id>1</Id><Produtos><Produto><Id>1542</Id><Nome>Bike GTS 26</Nome><Preco>2000</Preco><Quantidade>1</Quantidade></Produto></Produtos></Carrinho>";
+            byte[] xmlBytes = Encoding.UTF8.GetBytes(xml);
+            request.GetRequestStream().Write(xmlBytes, 0, xmlBytes.Length);
+
+            request.ContentType = "application/xml";
+
+            WebResponse response = request.GetResponse();
+            using (Stream responseStream = response.GetResponseStream())
+            {
+                StreamReader reader = new StreamReader(responseStream, Encoding.UTF8);
+                conteudo = reader.ReadToEnd();
+            }
+
+            Console.Write(conteudo);
+            Console.Read();
+        }
+
+        static void TestaPostWebResponse()
+        {
+            string conteudo;
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://localhost:53067/api/carrinho");
+            request.Method = "POST";
+            request.Accept = "application/xml"; // forca o retorno ser XML
+
+            string xml = "<Carrinho xmlns:i='http://www.w3.org/2001/XMLSchema-instance' xmlns='http://schemas.datacontract.org/2004/07/Loja.Models'><Endereco>Rua Vergueiro 3185, 8 andar, Sao Paulo</Endereco><Id>1</Id><Produtos><Produto><Id>1542</Id><Nome>Bike GTS 26</Nome><Preco>2000</Preco><Quantidade>1</Quantidade></Produto></Produtos></Carrinho>";
+            byte[] xmlBytes = Encoding.UTF8.GetBytes(xml);
+            request.GetRequestStream().Write(xmlBytes, 0, xmlBytes.Length);
+
+            request.ContentType = "application/xml";
+
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+            Console.WriteLine(response.StatusCode);
+            Console.WriteLine(response.Headers["Location"]);
+            Console.Read();
+        }
     }
 }
